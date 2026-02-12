@@ -54,6 +54,11 @@ body{
     flex-wrap:wrap;
     margin-top:10px
 }
+ .form_toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:column
+}
  .table{
     width:100%;
     border-collapse:collapse;
@@ -70,6 +75,10 @@ body{
  .table th{
     background:#eef2ff
 }
+ .table td button{
+    height: 55px;
+    width: 55px;
+}
 
 /* MOBILE */
 @media(max-width:600px){
@@ -83,9 +92,6 @@ body{
     }
      h2{
         font-size:20px
-    }
-     input,textarea{
-        width:95%
     }
      button{
         width:100%;
@@ -101,10 +107,6 @@ body{
     }
      .table th,.table td{
         padding:6px
-    }
-     .table td button{
-        height: 55px;
-        width: 55px;
     }
 }
  .container{
@@ -133,30 +135,32 @@ body{
 <form id="form">
 <input type="hidden" id="id">
 
-<label>Data</label>
-<input type="date" id="data" required>
-
-<label>Refeição</label>
-<select id="refeicao">
-<option>Almoço</option>
-<option>Jantar</option>
-<option>Café</option>
-<option>Lanche</option>
-</select>
-
-<label>Contagem Refeitório</label>
-<input type="number" id="refeitorio">
-
-<label>Contagem Gastronomia</label>
-<input type="number" id="gastronomia">
-
-<div style="display:flex;align-items:center;padding:10px 0;gap:6px">
-<input type="checkbox" id="cardapio" style="width:auto">
-<label for="cardapio">Cardápio conforme previsto</label>
+<div class="form_toolbar">
+    <label>Data</label>
+    <input type="date" id="data" required>
+    
+    <label>Refeição</label>
+    <select id="refeicao">
+    <option>Café</option>
+    <option>Almoço</option>
+    <option>Jantar</option>
+    <option>Lanche</option>
+    </select>
+    
+    <label>Contagem Refeitório</label>
+    <input type="number" id="refeitorio">
+    
+    <label>Contagem Gastronomia</label>
+    <input type="number" id="gastronomia">
+    
+    <div style="display:flex;align-items:center;padding:10px 0;gap:6px">
+        <input type="checkbox" id="cardapio" style="width:auto">
+        <label for="cardapio">Cardápio conforme previsto</label>
+    </div>
+    
+    <label>Observações</label>
+    <textarea id="obs"></textarea>
 </div>
-
-<label>Observações</label>
-<textarea id="obs"></textarea>
 
 <div class="toolbar">
 <button class="primary" type="submit">Salvar</button>
