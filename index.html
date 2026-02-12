@@ -40,7 +40,7 @@
       <input type="number" id="gastronomia">
 
       <div style="display: flex; align-items: center; padding: 10px 0;">
-        <input type="checkbox" id="cardapio" style="width: fit-content;">
+        <input type="checkbox" id="cardapio" style="width: fit-content; margin-right: 4px">
         <label for="cardapio">Cardápio conforme previsto</label>
       </div>
       
@@ -99,7 +99,7 @@
             <td>${r['Refeição']}</td>
             <td>${r['Contagem Refeitório']}</td>
             <td>${r['Contagem Gastronomia']}</td>
-            <td>${r['Cardápio OK']=='true'?'✔':'✖'}</td>
+            <td>${r['Cardápio OK'] == true ? '✔' : '✖'}</td>
             <td>
             <button onclick='editar(${JSON.stringify(r)})'>✏</button>
             <button class="danger" onclick='remover(${r.ID})'>🗑</button>
