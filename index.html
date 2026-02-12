@@ -101,9 +101,8 @@
       }
       
       function editar(r){
-        var date = new Date(r.Data);
         id.value=r.ID;
-        data.value=date.format('yyyy-mm-dd');
+        data.value=r.Data.split('T')[0];
         refeicao.value=r['Refeição'];
         refeitorio.value=r['Contagem Refeitório'];
         gastronomia.value=r['Contagem Gastronomia'];
