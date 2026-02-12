@@ -1,109 +1,126 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Controle de Refeições</title>
-<style>
-body{font-family:Arial;background:#f5f7fb;padding:20px}
-.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-h2{margin-top:0}
-input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:1px solid #ccc}
-button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
-.primary{background:#4f7cff;color:white}
-.danger{background:#ff5c5c;color:white}
-.table{width:100%;border-collapse:collapse;margin-top:20px}
-.table th,.table td{border:1px solid #ddd;padding:6px;text-align:center}
-.table th{background:#eef2ff}
-</style>
-</head>
-<body>
-<div class="container">
-<h2>Registro de Refeições</h2>
-<form id="form">
-<input type="hidden" id="id">
-<label>Data</label>
-<input type="date" id="data" required>
-<label>Refeição</label>
-<select id="refeicao">
-<option>Almoço</option>
-<option>Jantar</option>
-<option>Café</option>
-</select>
-<label>Contagem Refeitório</label>
-<input type="number" id="refeitorio">
-<label>Contagem Gastronomia</label>
-<input type="number" id="gastronomia">
-<label><input type="checkbox" id="cardapio"> Cardápio conforme previsto</label>
-<label>Anotações</label>
-<textarea id="obs"></textarea>
-<button class="primary" type="submit">Salvar</button>
-</form>
-
-<table class="table" id="tabela">
-<thead><tr><th>Data</th><th>Refeição</th><th>Refeitório</th><th>Gastronomia</th><th>Cardápio</th><th>Ações</th></tr></thead>
-<tbody></tbody>
-</table>
-</div>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyWgdtSY_-6y14_2hkri3StGHkopA68ErAYf5j804YFSr6EBbefJJuzEKip1FUpPe6cqA/exec";
-
-async function api(method,body=null){
-  return fetch(API_URL,{method:method,body:body?JSON.stringify(body):null})
-    .then(r=>r.json());
-}
-
-async function listar(){
-  const data = await api('GET');
-  const tbody=document.querySelector('#tabela tbody');
-  tbody.innerHTML='';
-  data.forEach(r=>{
-    tbody.innerHTML+=`<tr>
-<td>${r.Data}</td>
-<td>${r['Refeição']}</td>
-<td>${r['Contagem Refeitório']}</td>
-<td>${r['Contagem Gastronomia']}</td>
-<td>${r['Cardápio OK']=='true'?'✔':'✖'}</td>
-<td>
-<button onclick='editar(${JSON.stringify(r)})'>✏</button>
-<button class="danger" onclick='remover(${r.ID})'>🗑</button>
-</td></tr>`;
-  });
-}
-
-function editar(r){
-  id.value=r.ID;
-  data.value=r.Data;
-  refeicao.value=r['Refeição'];
-  refeitorio.value=r['Contagem Refeitório'];
-  gastronomia.value=r['Contagem Gastronomia'];
-  cardapio.checked=r['Cardápio OK']=='true';
-  obs.value=r['Anotações'];
-}
-
-async function remover(id){
-  await api('DELETE',{ID:id});
-  listar();
-}
-
-form.onsubmit=async e=>{
-  e.preventDefault();
-  const payload={
-    ID:id.value,
-    Data:data.value,
-    'Refeição':refeicao.value,
-    'Contagem Refeitório':refeitorio.value,
-    'Contagem Gastronomia':gastronomia.value,
-    'Cardápio OK':cardapio.checked,
-    'Anotações':obs.value
-  };
-  if(id.value) await api('PUT',payload);
-  else await api('POST',payload);
-  form.reset();
-  listar();
-}
-
-listar();
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Controle de Refeições</title>
+    <style>
+      body{font-family:Arial;background:#f5f7fb;padding:20px}
+      .container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+      h2{margin-top:0}
+      input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:1px solid #ccc}
+      button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
+      .primary{background:#4f7cff;color:white}
+      .danger{background:#ff5c5c;color:white}
+      .table{width:100%;border-collapse:collapse;margin-top:20px}
+      .table th,.table td{border:1px solid #ddd;padding:6px;text-align:center}
+      .table th{background:#eef2ff}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+    <h2>Registro de Refeições</h2>
+    <form id="form">
+      <input type="hidden" id="id">
+      
+      <label>Data</label>
+      <input type="date" id="data" required>
+      
+      <label>Refeição</label>
+      <select id="refeicao">
+        <option>Almoço</option>
+        <option>Jantar</option>
+        <option>Café</option>
+        <option>Lanche</option>
+      </select>
+        
+      <label>Contagem Refeitório</label>
+      <input type="number" id="refeitorio">
+        
+      <label>Contagem Gastronomia</label>
+      <input type="number" id="gastronomia">
+        
+      <label for="cardapio"><input type="checkbox" id="cardapio"> Cardápio conforme previsto</label>
+        
+      <label>Observações</label>
+      <textarea id="obs"></textarea>
+        
+      <button class="primary" type="submit">Salvar</button>
+    </form>
+    
+    <table class="table" id="tabela">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Refeição</th>
+          <th>Refeitório</th>
+          <th>Gastronomia</th>
+          <th>Cardápio</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  
+    <script>
+      const API_URL = "https://script.google.com/macros/s/AKfycbyWgdtSY_-6y14_2hkri3StGHkopA68ErAYf5j804YFSr6EBbefJJuzEKip1FUpPe6cqA/exec";
+      
+      async function api(method,body=null){
+        return fetch(API_URL,{method:method,body:body?JSON.stringify(body):null})
+          .then(r=>r.json());
+      }
+      
+      async function listar(){
+        const data = await api('GET');
+        const tbody=document.querySelector('#tabela tbody');
+        tbody.innerHTML='';
+        data.forEach(r=>{
+          tbody.innerHTML+=`<tr>
+            <td>${r.Data}</td>
+            <td>${r['Refeição']}</td>
+            <td>${r['Contagem Refeitório']}</td>
+            <td>${r['Contagem Gastronomia']}</td>
+            <td>${r['Cardápio OK']=='true'?'✔':'✖'}</td>
+            <td>
+            <button onclick='editar(${JSON.stringify(r)})'>✏</button>
+            <button class="danger" onclick='remover(${r.ID})'>🗑</button>
+            </td></tr>`;
+        });
+      }
+      
+      function editar(r){
+        id.value=r.ID;
+        data.value=r.Data;
+        refeicao.value=r['Refeição'];
+        refeitorio.value=r['Contagem Refeitório'];
+        gastronomia.value=r['Contagem Gastronomia'];
+        cardapio.checked=r['Cardápio OK']=='true';
+        obs.value=r['Anotações'];
+      }
+      
+      async function remover(id){
+        await api('DELETE',{ID:id});
+        listar();
+      }
+      
+      form.onsubmit=async e=>{
+        e.preventDefault();
+        const payload={
+          ID:id.value,
+          Data:data.value,
+          'Refeição':refeicao.value,
+          'Contagem Refeitório':refeitorio.value,
+          'Contagem Gastronomia':gastronomia.value,
+          'Cardápio OK':cardapio.checked,
+          'Anotações':obs.value
+        };
+        if(id.value) await api('PUT',payload);
+        else await api('POST',payload);
+        form.reset();
+        listar();
+      }
+      
+      listar();
+    </script>
+  </body>
 </html>
