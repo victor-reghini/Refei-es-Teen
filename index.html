@@ -39,7 +39,8 @@
       <label>Contagem Gastronomia</label>
       <input type="number" id="gastronomia">
         
-      <label for="cardapio"><input type="checkbox" id="cardapio"> Cardápio conforme previsto</label>
+      <label for="cardapio">Cardápio conforme previsto</label>
+      <input type="checkbox" id="cardapio">
         
       <label>Observações</label>
       <textarea id="obs"></textarea>
@@ -82,8 +83,9 @@
         const tbody=document.querySelector('#tabela tbody');
         tbody.innerHTML='';
         data.forEach(r=>{
+          var date = new Date(r.Data);
           tbody.innerHTML+=`<tr>
-            <td>${r.Data}</td>
+            <td>${date.toLocaleDateString('pt-BR')}</td>
             <td>${r['Refeição']}</td>
             <td>${r['Contagem Refeitório']}</td>
             <td>${r['Contagem Gastronomia']}</td>
