@@ -65,13 +65,20 @@
     <script>
       const API_URL = "https://script.google.com/macros/s/AKfycbyWgdtSY_-6y14_2hkri3StGHkopA68ErAYf5j804YFSr6EBbefJJuzEKip1FUpPe6cqA/exec";
       
-      async function api(method,body=null){
+      async function api_fetch(method,body=null){
         return fetch(API_URL,{method:method,body:body?JSON.stringify(body):null})
           .then(r=>r.json());
       }
+      async function api(action, body=null){
+        return fetch(API_URL,{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ _method: action, ...body })
+        }).then(r=>r.json());
+      }
       
       async function listar(){
-        const data = await api('GET');
+        const data = await api_fetch('GET');
         const tbody=document.querySelector('#tabela tbody');
         tbody.innerHTML='';
         data.forEach(r=>{
@@ -114,8 +121,11 @@
           'Cardápio OK':cardapio.checked,
           'Anotações':obs.value
         };
-        if(id.value) await api('PUT',payload);
-        else await api('POST',payload);
+        
+        if(id.value) await api('UPDATE',payload);
+          
+        else await api('CREATE',payload);
+        
         form.reset();
         listar();
       }
