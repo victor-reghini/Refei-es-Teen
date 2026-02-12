@@ -1,148 +1,186 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8">
-    <title>Controle de Refeições</title>
-    <style>
-      body{font-family:Arial;background:#f5f7fb;padding:20px}
-      .container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-      h2{margin-top:0}
-      input,select,textarea{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:1px solid #ccc}
-      button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
-      .primary{background:#4f7cff;color:white}
-      .danger{background:#ff5c5c;color:white}
-      .table{width:100%;border-collapse:collapse;margin-top:20px}
-      .table th,.table td{border:1px solid #ddd;padding:6px;text-align:center}
-      .table th{background:#eef2ff}
-    </style>
-  </head>
-  <body>
-    <div class="container">
-    <h2>Registro de Refeições</h2>
-    <form id="form">
-      <input type="hidden" id="id">
-      
-      <label>Data</label>
-      <input type="date" id="data" required>
-      
-      <label>Refeição</label>
-      <select id="refeicao">
-        <option>Almoço</option>
-        <option>Jantar</option>
-        <option>Café</option>
-        <option>Lanche</option>
-      </select>
-        
-      <label>Contagem Refeitório</label>
-      <input type="number" id="refeitorio">
-        
-      <label>Contagem Gastronomia</label>
-      <input type="number" id="gastronomia">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Refeições</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f5f7fb;padding:20px}
+.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+h2{margin-top:0}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;font-size:16px}
+button{padding:10px 16px;border:none;border-radius:10px;cursor:pointer;font-size:15px}
+.primary{background:#4f7cff;color:white}
+.danger{background:#ff5c5c;color:white}
+.secondary{background:#999;color:white}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.table{width:100%;border-collapse:collapse;margin-top:20px}
+.table th,.table td{border:1px solid #ddd;padding:8px;text-align:center}
+.table th{background:#eef2ff}
 
-      <div style="display: flex; align-items: center; padding: 10px 0;">
-        <input type="checkbox" id="cardapio" style="width: fit-content; margin-right: 4px">
-        <label for="cardapio">Cardápio conforme previsto</label>
-      </div>
-      
-        
-      <label>Observações</label>
-      <textarea id="obs"></textarea>
-        
-      <button class="primary" type="submit">Salvar</button>
-    </form>
-    
-    <table class="table" id="tabela">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Refeição</th>
-          <th>Refeitório</th>
-          <th>Gastronomia</th>
-          <th>Cardápio</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    </div>
-  
-    <script>
-      const API_URL = "https://script.google.com/macros/s/AKfycbyWgdtSY_-6y14_2hkri3StGHkopA68ErAYf5j804YFSr6EBbefJJuzEKip1FUpPe6cqA/exec";
-      
-      async function api_fetch(method,body=null){
-        return fetch(API_URL,{method:method,body:body?JSON.stringify(body):null})
-          .then(r=>r.json());
-      }
-      
-      async function api(action, body={}){
-        const form = new URLSearchParams();
-        form.append("_method", action);
-      
-        Object.keys(body).forEach(k=>{
-          form.append(k, body[k]);
-        });
-      
-        return fetch(API_URL,{
-          method:"POST",
-          body: form
-        }).then(r=>r.json());
-      }
-      
-      async function listar(){
-        const data = await api_fetch('GET');
-        const tbody=document.querySelector('#tabela tbody');
-        tbody.innerHTML='';
-        data.forEach(r=>{
-          var date = new Date(r.Data);
-          tbody.innerHTML+=`<tr>
-            <td>${date.toLocaleDateString('pt-BR')}</td>
-            <td>${r['Refeição']}</td>
-            <td>${r['Contagem Refeitório']}</td>
-            <td>${r['Contagem Gastronomia']}</td>
-            <td>${r['Cardápio OK'] == true ? '✔' : '✖'}</td>
-            <td>
-            <button onclick='editar(${JSON.stringify(r)})'>✏</button>
-            <button class="danger" onclick='remover(${r.ID})'>🗑</button>
-            </td></tr>`;
-        });
-      }
-      
-      function editar(r){
-        id.value=r.ID;
-        data.value=r.Data.split('T')[0];
-        refeicao.value=r['Refeição'];
-        refeitorio.value=r['Contagem Refeitório'];
-        gastronomia.value=r['Contagem Gastronomia'];
-        cardapio.checked=r['Cardápio OK'] == true;
-        obs.value=r['Anotações'];
-      }
-      
-      async function remover(id){
-        await api('DELETE',{ID:id});
-        listar();
-      }
-      
-      form.onsubmit=async e=>{
-        e.preventDefault();
-        const payload={
-          ID:id.value,
-          Data:data.value,
-          'Refeição':refeicao.value,
-          'Contagem Refeitório':refeitorio.value,
-          'Contagem Gastronomia':gastronomia.value,
-          'Cardápio OK':cardapio.checked,
-          'Anotações':obs.value
-        };
-        
-        if(id.value) await api('UPDATE',payload);
-          
-        else await api('CREATE',payload);
-        
-        form.reset();
-        listar();
-      }
-      
-      listar();
-    </script>
-  </body>
+/* MOBILE */
+@media(max-width:600px){
+  body{padding:10px}
+  .container{padding:14px}
+  h2{font-size:20px}
+  button{width:100%;font-size:18px;padding:14px}
+  .toolbar{flex-direction:column}
+  .table th,.table td{font-size:14px;padding:10px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Registro de Refeições</h2>
+<form id="form">
+<input type="hidden" id="id">
+
+<label>Data</label>
+<input type="date" id="data" required>
+
+<label>Refeição</label>
+<select id="refeicao">
+<option>Almoço</option>
+<option>Jantar</option>
+<option>Café</option>
+<option>Lanche</option>
+</select>
+
+<label>Contagem Refeitório</label>
+<input type="number" id="refeitorio">
+
+<label>Contagem Gastronomia</label>
+<input type="number" id="gastronomia">
+
+<div style="display:flex;align-items:center;padding:10px 0;gap:6px">
+<input type="checkbox" id="cardapio" style="width:auto">
+<label for="cardapio">Cardápio conforme previsto</label>
+</div>
+
+<label>Observações</label>
+<textarea id="obs"></textarea>
+
+<div class="toolbar">
+<button class="primary" type="submit">Salvar</button>
+<button type="button" class="secondary" onclick="cancelarEdicao()">Cancelar</button>
+<button type="button" onclick="exportarPDF()">Exportar PDF</button>
+</div>
+</form>
+
+<table class="table" id="tabela">
+<thead>
+<tr>
+<th>Data</th>
+<th>Refeição</th>
+<th>Refeitório</th>
+<th>Gastronomia</th>
+<th>Cardápio</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyWgdtSY_-6y14_2hkri3StGHkopA68ErAYf5j804YFSr6EBbefJJuzEKip1FUpPe6cqA/exec";
+
+async function api_fetch(method){
+  return fetch(API_URL,{method:method}).then(r=>r.json());
+}
+
+async function api(action, body={}){
+  const form = new URLSearchParams();
+  form.append("_method", action);
+  Object.keys(body).forEach(k=>form.append(k, body[k]));
+  return fetch(API_URL,{method:"POST",body:form}).then(r=>r.json());
+}
+
+async function listar(){
+  const data = await api_fetch('GET');
+  const tbody=document.querySelector('#tabela tbody');
+  tbody.innerHTML='';
+  window.__cache=data;
+  data.forEach(r=>{
+    const date=new Date(r.Data);
+    tbody.innerHTML+=`<tr>
+<td>${date.toLocaleDateString('pt-BR')}</td>
+<td>${r['Refeição']}</td>
+<td>${r['Contagem Refeitório']}</td>
+<td>${r['Contagem Gastronomia']}</td>
+<td>${r['Cardápio OK']==true?'✔':'✖'}</td>
+<td>
+<button onclick='editar(${JSON.stringify(r)})'>✏</button>
+<button class="danger" onclick='remover(${r.ID})'>🗑</button>
+</td></tr>`;
+  });
+}
+
+function editar(r){
+  id.value=r.ID;
+  data.value=r.Data.split('T')[0];
+  refeicao.value=r['Refeição'];
+  refeitorio.value=r['Contagem Refeitório'];
+  gastronomia.value=r['Contagem Gastronomia'];
+  cardapio.checked=r['Cardápio OK']==true;
+  obs.value=r['Anotações'];
+}
+
+function cancelarEdicao(){
+  form.reset();
+  id.value='';
+}
+
+async function remover(idv){
+  await api('DELETE',{ID:idv});
+  listar();
+}
+
+form.onsubmit=async e=>{
+  e.preventDefault();
+  const payload={
+    ID:id.value,
+    Data:data.value,
+    'Refeição':refeicao.value,
+    'Contagem Refeitório':refeitorio.value,
+    'Contagem Gastronomia':gastronomia.value,
+    'Cardápio OK':cardapio.checked,
+    'Anotações':obs.value
+  };
+
+  if(id.value) await api('UPDATE',payload);
+  else await api('CREATE',payload);
+
+  cancelarEdicao();
+  listar();
+}
+
+async function exportarPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF();
+
+  const rows=(window.__cache||[]).map(r=>[
+    new Date(r.Data).toLocaleDateString('pt-BR'),
+    r['Refeição'],
+    r['Contagem Refeitório'],
+    r['Contagem Gastronomia'],
+    r['Cardápio OK']?'Sim':'Não'
+  ]);
+
+  doc.text('Relatório de Refeições',14,15);
+  doc.autoTable({
+    head:[['Data','Refeição','Refeitório','Gastronomia','Cardápio OK']],
+    body:rows,
+    startY:20
+  });
+
+  doc.save('refeicoes.pdf');
+}
+
+listar();
+</script>
+</body>
 </html>
