@@ -38,9 +38,12 @@
         
       <label>Contagem Gastronomia</label>
       <input type="number" id="gastronomia">
-        
-      <label for="cardapio">Cardápio conforme previsto</label>
-      <input type="checkbox" id="cardapio">
+
+      <div style="display: flex; justify-content: left; align-items: center">
+        <label for="cardapio">Cardápio conforme previsto</label>
+        <input type="checkbox" id="cardapio">
+      </div>
+      
         
       <label>Observações</label>
       <textarea id="obs"></textarea>
@@ -98,8 +101,9 @@
       }
       
       function editar(r){
+        var date = new Date(r.Data);
         id.value=r.ID;
-        data.value=new Date(r.Data);
+        data.value=date.format('yyyy-mm-dd');
         refeicao.value=r['Refeição'];
         refeitorio.value=r['Contagem Refeitório'];
         gastronomia.value=r['Contagem Gastronomia'];
