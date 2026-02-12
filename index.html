@@ -99,7 +99,7 @@
       
       function editar(r){
         id.value=r.ID;
-        data.value=r.Data;
+        data.value=new Date(r.Data);
         refeicao.value=r['Refeição'];
         refeitorio.value=r['Contagem Refeitório'];
         gastronomia.value=r['Contagem Gastronomia'];
