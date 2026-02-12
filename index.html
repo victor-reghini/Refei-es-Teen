@@ -168,14 +168,16 @@ async function exportarPDF(){
     r['Refeição'],
     r['Contagem Refeitório'],
     r['Contagem Gastronomia'],
-    r['Cardápio OK']?'Sim':'Não'
+    r['Cardápio OK']?'Sim':'Não',
+    r['Anotações']||''
   ]);
 
   doc.text('Relatório de Refeições',14,15);
   doc.autoTable({
-    head:[['Data','Refeição','Refeitório','Gastronomia','Cardápio OK']],
+    head:[['Data','Refeição','Refeitório','Gastronomia','Cardápio OK', 'Observações']],
     body:rows,
-    startY:20
+    startY:20,
+    styles:{cellWidth:'wrap'}
   });
 
   doc.save('refeicoes.pdf');
