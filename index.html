@@ -281,10 +281,17 @@ async function exportarPDF(){
     body:rows,
     startY:20,
     styles:{
-      cellWidth:'wrap',
       overflow: 'linebreak',
       cellPadding: 3,
       fontSize: 10
+    },
+    columnStyles: {
+      0: { cellWidth: 25 }, // Data
+      1: { cellWidth: 25 }, // Refeição
+      2: { cellWidth: 25 }, // Refeitório
+      3: { cellWidth: 25 }, // Gastronomia
+      4: { cellWidth: 25 }, // Cardápio OK
+      5: { cellWidth: 'auto' } // Observações
     }
   });
 
