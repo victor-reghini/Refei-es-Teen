@@ -264,24 +264,25 @@ form.onsubmit=async e=>{
 
 async function exportarPDF(){
   const { jsPDF } = window.jspdf;
-  const doc=new jsPDF();
+  const doc = new jsPDF();
 
-  const rows=(window.__cache||[]).map(r=>[
+  const rows = (window.__cache || []).map(r => [
     new Date(r.Data).toLocaleDateString('pt-BR'),
     r['Refeição'],
     r['Contagem Refeitório'],
     r['Contagem Gastronomia'],
-    r['Cardápio OK']?'Sim':'Não',
-    r['Anotações']||''
+    r['Cardápio OK'] ? 'Sim' : 'Não',
+    r['Anotações'] || ''
   ]);
 
-  doc.text('Relatório de Refeições',14,15);
+  doc.text('Relatório de Refeições', 14, 15);
+  
   doc.autoTable({
-    head:[['Data','Refeição','Refeitório','Gastronomia','Cardápio OK', 'Observações']],
-    body:rows,
-    startY:20,
-    styles:{
-      overflow: 'linebreak',
+    head: [['Data', 'Refeição', 'Refeitório', 'Gastronomia', 'Cardápio OK', 'Observações']],
+    body: rows,
+    startY: 20,
+    styles: { 
+      overflow: 'linebreak', // Garante a quebra de linha nas células
       cellPadding: 3,
       fontSize: 10
     },
