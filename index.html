@@ -280,7 +280,12 @@ async function exportarPDF(){
     head:[['Data','Refeição','Refeitório','Gastronomia','Cardápio OK', 'Observações']],
     body:rows,
     startY:20,
-    styles:{cellWidth:'wrap'}
+    styles:{
+      cellWidth:'wrap',
+      overflow: 'linebreak',
+      cellPadding: 3,
+      fontSize: 10
+    }
   });
 
   doc.save('refeicoes.pdf');
